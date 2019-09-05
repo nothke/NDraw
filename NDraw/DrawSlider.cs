@@ -8,6 +8,14 @@ namespace NDraw
     {
         public static partial class Screen
         {
+            /// <summary>
+            /// Draws a rect that gets "filled" similar to a UI slider. Value is in 0-1
+            /// </summary>
+            /// <param name="value">In 0-1</param>
+            /// <param name="x">Rect x position</param>
+            /// <param name="y">Rect y position</param>
+            /// <param name="color"></param>
+            /// <param name="width">Height ofr the slider rect</param>
             public static void Slider(float value, int x, int y, Color color, int width)
             {
                 if (!Drawer.Exists) return;
@@ -23,6 +31,14 @@ namespace NDraw
                 FillRect(x, y, (int)(value * width), 10);
             }
 
+            /// <summary>
+            /// Draws a rect that gets "filled" similar to a UI slider with -1 to 1 values where 0 is in the center.
+            /// </summary>
+            /// <param name="value">In -1 to 1</param>
+            /// <param name="x">Rect x position</param>
+            /// <param name="y">Rect y position</param>
+            /// <param name="color"></param>
+            /// <param name="width">Height ofr the slider rect</param>
             public static void MidSlider(float value, int x, int y, Color color, int width)
             {
                 if (!Drawer.Exists) return;
