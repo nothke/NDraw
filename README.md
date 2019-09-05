@@ -8,6 +8,7 @@ Runtime line drawing utility for Unity.
 4. Can draw both in screenspace and worldspace through its Screen and World subclasses;
 5. Simple code that can be easily extended;
 6. Many available shapes that keep being added as I work on projects;
+7. All of those shapes are also optional and can be freely removed from the project if not needed.
 
 ## How to use?
 Using the functions follows a simple form: 
@@ -39,5 +40,8 @@ Draw a ray in world-space from origin and up one meter:
 
 See NDrawExample.cs for other examples.
 
+## Optional components
+The necessary components are __Drawer.cs__, which is the MonoBehaviour that draws the lines at the end of the frame, and __DrawCore.cs__, which contains the point and color caches used by the Drawer. Everything else is optional, for example if you just want to draw lines and rays you can keep the DrawLines.cs and remove all other scripts from the project.
+
 ## Extending
-The whole library is a set of partial static classes and new drawing functions can be very easily added in separate files. But make sure to put `if (!Drawer.Exists) return;` on top of your methods since it may cause a memory leak if the Drawer doesn't exit in scene. For examples, just take a look at Draw classes like `DrawShapes.cs`
+The whole library is a set of partial static classes and new drawing functions can be very easily added in separate files. But make sure to put `if (!Drawer.Exists) return;` on top of your methods since it may cause a memory leak if the Drawer doesn't exist in the scene. For examples, just take a look at Draw classes like `DrawShapes.cs`
