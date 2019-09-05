@@ -15,7 +15,7 @@ namespace NDraw
             /// <param name="x">Rect x position</param>
             /// <param name="y">Rect y position</param>
             /// <param name="color"></param>
-            /// <param name="width">Height ofr the slider rect</param>
+            /// <param name="width">Width of the rect</param>
             public static void Slider(float value, int x, int y, Color color, int width)
             {
                 if (!Drawer.Exists) return;
@@ -38,7 +38,7 @@ namespace NDraw
             /// <param name="x">Rect x position</param>
             /// <param name="y">Rect y position</param>
             /// <param name="color"></param>
-            /// <param name="width">Height ofr the slider rect</param>
+            /// <param name="width">Width of the rect</param>
             public static void MidSlider(float value, int x, int y, Color color, int width)
             {
                 if (!Drawer.Exists) return;
