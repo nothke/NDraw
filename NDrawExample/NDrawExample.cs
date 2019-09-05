@@ -60,6 +60,9 @@ public class NDrawExample : MonoBehaviour
 
         Draw.Screen.Pie(200, 200, 45, 50, -pieValue);
 
+        Draw.Screen.Slider(pieValue * 0.5f, 200, 50, Color.red, 200);
+        Draw.Screen.MidSlider(pieValue * 0.5f, 200, 60, Color.blue, 200);
+
         // 3D
 
         Draw.World.Line(Vector3.zero, Vector3.forward * 100);
