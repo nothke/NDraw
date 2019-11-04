@@ -50,6 +50,19 @@ namespace NDraw
                     screenPoints.Add(points[i + 1]);
                 }
             }
+
+            public static void MultiLine(Vector2[] points, Vector2 offset, float scale)
+            {
+                if (!Drawer.Exists) return;
+
+                if (points.Length < 2) return;
+
+                for (int i = 0; i < points.Length - 1; i++)
+                {
+                    screenPoints.Add(offset + points[i] * scale);
+                    screenPoints.Add(offset + points[i + 1] * scale);
+                }
+            }
         }
 
         public static partial class World
