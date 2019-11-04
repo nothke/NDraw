@@ -1,4 +1,19 @@
-﻿using System.Collections;
+﻿///
+/// You can use 2 defines, and add them in Settings > Player > Other Settings > Scripting Define Symbols:
+/// 
+/// NDRAW_ORHTO_MULTIPLICATION
+///     ^ If screen space lines don't draw in some cases (for example in HDRP), try using this define. 
+///     Reason: GL.LoadPixelMatrix() doesn't seem to work in some cases so GL.LoadOrtho() needs to be used instead,
+///     but there is a tiny cost of multiplying each vertex with screen resolution.
+///     
+/// NDRAW_UPDATE_IN_COROUTINE
+///     ^ In case you are using SRP (URP or HDRP) and you don't see any lines, try using this define.
+///     Reason: NDraw typically uses OnPostRender() for drawing, but in SRP this callback is not functional.
+///     Instead a coroutine that waits for end of frame is used. IT doesn't produce any GC allocs because
+///     WaitForEndOfFrame is cached.
+///     
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -14,6 +29,8 @@ namespace NDraw
 
         public static bool Exists { get { return e != null; } }
 
+        static readonly Vector2 one = Vector2.one;
+
         private void Awake()
         {
             e = this;
@@ -24,7 +41,10 @@ namespace NDraw
             CreateLineMaterial();
 
             camera = GetComponent<Camera>();
-            //StartCoroutine(PostRender());
+
+#if NDRAW_UPDATE_IN_COROUTINE
+            StartCoroutine(PostRender());
+#endif
         }
 
         private void OnDestroy()
@@ -34,6 +54,7 @@ namespace NDraw
 
         WaitForEndOfFrame wof = new WaitForEndOfFrame();
 
+#if !NDRAW_UPDATE_IN_COROUTINE
         private void OnPostRender()
         {
             if (enabled)
@@ -41,8 +62,9 @@ namespace NDraw
 
             Draw.Clear();
         }
+#endif
 
-        /*
+#if NDRAW_UPDATE_IN_COROUTINE
         IEnumerator PostRender()
         {
             while (true)
@@ -54,7 +76,8 @@ namespace NDraw
 
                 Draw.Clear();
             }
-        }*/
+        }
+#endif
 
         void CreateLineMaterial()
         {
@@ -77,8 +100,9 @@ namespace NDraw
         {
             material.SetPass(0);
 
+            //-------------
             // WORLD SPACE
-
+            //-------------
 
             GL.PushMatrix();
             GL.LoadProjectionMatrix(camera.projectionMatrix);
@@ -86,7 +110,7 @@ namespace NDraw
 
             GL.Begin(GL.LINES);
             GL.Color(Color.white);
-            ProcessPoints(Draw.worldPoints, Draw.worldColorIndices);
+            ProcessPoints(Draw.worldPoints, Draw.worldColorIndices, false);
             GL.End();
 
             /*
@@ -100,28 +124,38 @@ namespace NDraw
 
             GL.PopMatrix();
 
+            //--------------
             // SCREEN SPACE
+            //--------------
 
             GL.PushMatrix();
+
+#if NDRAW_ORHTO_MULTIPLICATION
+            GL.LoadOrtho();
+#else
             GL.LoadPixelMatrix();
+#endif
 
             GL.Begin(GL.TRIANGLES);
-            ProcessPoints(Draw.screenTrisPoints, Draw.screenTrisColorIndices);
+            ProcessPoints(Draw.screenTrisPoints, Draw.screenTrisColorIndices, true);
             GL.End();
 
             GL.Begin(GL.LINES);
-            ProcessPoints(Draw.screenPoints, Draw.screenColorIndices);
+            ProcessPoints(Draw.screenPoints, Draw.screenColorIndices, true);
             GL.End();
 
             GL.PopMatrix();
 
         }
 
-        static void ProcessPoints(List<Vector3> points, List<Draw.ColorIndex> colorIndices)
+        static void ProcessPoints(List<Vector3> points, List<Draw.ColorIndex> colorIndices, bool screen)
         {
             if (points.Count == 0) return;
 
             //GL.Color(Color.white);
+#if NDRAW_ORHTO_MULTIPLICATION
+            Vector2 s = screen ? new Vector2(1.0f / Screen.width, 1.0f / Screen.height) : one;
+#endif
 
             bool hasColors = colorIndices.Count > 0;
 
@@ -139,7 +173,14 @@ namespace NDraw
                 }
 
                 // push vertex
+#if NDRAW_ORHTO_MULTIPLICATION
+                if (screen)
+                    GL.Vertex(points[i] * s);
+                else
+                    GL.Vertex(points[i]);
+#else
                 GL.Vertex(points[i]);
+#endif
             }
         }
     }
