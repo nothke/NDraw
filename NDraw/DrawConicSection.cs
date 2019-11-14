@@ -17,8 +17,8 @@ namespace NDraw
             /// <param name="eccentricity">e=0 is circle, e less than 1 is ellipse, e=1 is parabola, e more than 1 is hyperbola </param>
             /// <param name="semiMajorAxis">Semi major axis of the ellipse, in case e is more than 1 it should be negative</param>
             /// <param name="normal">The normal vector of the section</param>
-            /// <param name="forward">The direction of the periapsis</param>
-            public static void ConicSection(Vector3 center, float eccentricity, float semiMajorAxis, Vector3 normal, Vector3 forward, int interpolations)
+            /// <param name="periapsisDirection">The direction of the periapsis</param>
+            public static void ConicSection(Vector3 center, float eccentricity, float semiMajorAxis, Vector3 normal, Vector3 periapsisDirection, int interpolations)
             {
                 float semilatus = eccentricity == 1 ? semiMajorAxis :
                     semiMajorAxis * (1 - eccentricity * eccentricity);
@@ -27,8 +27,8 @@ namespace NDraw
                 if (interpolations <= 0) interpolations = 10;
                 if (eccentricity < 0) eccentricity = 0;
 
-                forward = Vector3.ProjectOnPlane(forward, normal).normalized;
-                Vector3 right = Vector3.Cross(forward, normal).normalized;
+                periapsisDirection = Vector3.ProjectOnPlane(periapsisDirection, normal).normalized;
+                Vector3 right = Vector3.Cross(periapsisDirection, normal).normalized;
 
                 Vector3 prevlp = new Vector3();
                 Vector3 prevrp = new Vector3();
@@ -47,7 +47,7 @@ namespace NDraw
                     if (r < 0) { r *= -100; breakn = true; }
 
                     Vector3 rvec = right * Mathf.Sin(theta) * r;
-                    Vector3 fvec = forward * cosTheta * r;
+                    Vector3 fvec = periapsisDirection * cosTheta * r;
 
                     // Left side
                     Vector3 lp = center - rvec + fvec;
