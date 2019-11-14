@@ -226,18 +226,13 @@ namespace NDraw
                     Vector3.ProjectOnPlane(Vector3.forward, normal).normalized :
                     Vector3.ProjectOnPlane(Vector3.up, normal).normalized;
 
-                //Vector3 right = Vector3.Cross(normal, forward);
-
                 Vector3 p = center + forward * radius;
-                //Vector3 pLast = p;
 
                 float step = 360.0f / interpolations;
 
                 for (int i = 0; i <= interpolations; i++)
                 {
                     float theta = i * step;
-
-                    //Vector3 ci = center + forward * Mathf.Cos(theta) * radius + right * Mathf.Sin(theta) * radius;
 
                     worldPoints.Add(p);
 
