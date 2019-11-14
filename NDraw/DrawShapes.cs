@@ -217,37 +217,35 @@ namespace NDraw
                 worldPoints.Add(center + frw + rgt + upw);
             }
 
-            public static void Circle(Vector3 center, float radius, Vector3 normal)
+            public static void Circle(Vector3 center, float radius, Vector3 normal, int interpolations = 100)
             {
                 if (!Drawer.Exists) return;
 
                 normal = normal.normalized;
                 Vector3 forward = normal == Vector3.up ?
                     Vector3.ProjectOnPlane(Vector3.forward, normal).normalized :
-                    Vector3.ProjectOnPlane(Vector3.up, normal);
+                    Vector3.ProjectOnPlane(Vector3.up, normal).normalized;
 
                 //Vector3 right = Vector3.Cross(normal, forward);
 
-                Vector3 ci = center + forward * radius;
-                Vector3 c0 = ci;
+                Vector3 p = center + forward * radius;
+                //Vector3 pLast = p;
 
-                for (float theta = 0.0f; theta < (2 * Mathf.PI); theta += 0.01f)
+                float step = 360.0f / interpolations;
+
+                for (int i = 0; i <= interpolations; i++)
                 {
+                    float theta = i * step;
+
                     //Vector3 ci = center + forward * Mathf.Cos(theta) * radius + right * Mathf.Sin(theta) * radius;
 
-                    worldPoints.Add(ci);
+                    worldPoints.Add(p);
 
-                    Vector3 angleDir = Quaternion.AngleAxis(theta * Mathf.Rad2Deg, normal) * forward;
-                    ci = center + angleDir.normalized * radius;
+                    Vector3 angleDir = Quaternion.AngleAxis(theta, normal) * forward;
+                    p = center + angleDir * radius;
 
-                    worldPoints.Add(ci);
-
-                    //if (theta != 0)
-                    //GL.Vertex(ci);
+                    worldPoints.Add(p);
                 }
-
-                //worldPoints.Add(ci);
-                //worldPoints.Add(c0);
             }
 
             public static void Helix(Vector3 p1, Vector3 p2, Vector3 forward, float radius, float angle)
