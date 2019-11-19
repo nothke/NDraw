@@ -32,22 +32,22 @@ namespace NDraw
                 screenPoints.Add(new Vector2(x, y));
             }
 
-            public static void Circle(Vector2 center, float pixelRadius)
+            public static void Circle(Vector2 center, float pixelRadius, int interpolations = 40)
             {
-                Circle(center.x, center.y, pixelRadius);
+                Circle(center.x, center.y, pixelRadius, interpolations);
             }
 
-            public static void Circle(float centerX, float centerY, float pixelRadius)
+            public static void Circle(float centerX, float centerY, float pixelRadius, int interpolations = 40)
             {
                 if (!Drawer.Exists) return;
 
                 Vector2 size = new Vector2(pixelRadius, pixelRadius);
                 Vector2 center = new Vector2(centerX, centerY);
 
-                Ellipse(center, size);
+                Ellipse(center, size, interpolations);
             }
 
-            public static void Ellipse(Vector2 center, Vector2 size)
+            public static void Ellipse(Vector2 center, Vector2 size, int interpolations = 40)
             {
                 if (!Drawer.Exists) return;
 
@@ -59,9 +59,11 @@ namespace NDraw
                     center.y);
 
                 Vector2 ci0 = ci;
+                float step = (2 * Mathf.PI) / interpolations;
 
-                for (float theta = 0.0f; theta < (2 * Mathf.PI); theta += 0.1f)
+                for (int i = 0; i < interpolations; i++)
                 {
+                    float theta = i * step;
                     screenPoints.Add(ci);
 
                     ci = new Vector2(center.x + (Mathf.Cos(theta) * radX), center.y + (Mathf.Sin(theta) * radY));
