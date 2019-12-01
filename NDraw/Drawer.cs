@@ -38,7 +38,8 @@ namespace NDraw
 
         private void Start()
         {
-            CreateLineMaterial();
+            if (material == null)
+                CreateLineMaterial();
 
             camera = GetComponent<Camera>();
 
