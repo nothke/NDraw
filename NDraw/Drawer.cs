@@ -27,7 +27,7 @@ namespace NDraw
         public Material material;
         new Camera camera;
 
-        public static bool Exists { get { return e != null; } }
+        public static bool Exists { get { return e != null && e.enabled; } }
 
         static readonly Vector2 one = Vector2.one;
 
