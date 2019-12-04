@@ -1,0 +1,14 @@
+{
+    "name": "Nothke.NDraw.Example",
+    "references": [
+        "GUID:570dd93a3b49da0419be9eb2f9701a38"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": []
+}
