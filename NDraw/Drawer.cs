@@ -36,7 +36,7 @@ namespace NDraw
             e = this;
         }
 
-        private void Start()
+        protected virtual void Start()
         {
             if (material == null)
                 CreateLineMaterial();
@@ -97,7 +97,7 @@ namespace NDraw
             material.SetInt("_ZTest", 0);
         }
 
-        void Render()
+        protected void Render()
         {
             material.SetPass(0);
 
@@ -113,15 +113,6 @@ namespace NDraw
             GL.Color(Color.white);
             ProcessPoints(Draw.worldPoints, Draw.worldColorIndices, false);
             GL.End();
-
-            /*
-            GL.Begin(GL.TRIANGLES);
-            GL.Color(new Color(1f, 1f, 1f, 0.3f));
-            GL.Vertex3(0, 0, 0);
-            GL.Vertex3(3, 3, 0);
-            GL.Vertex3(0, 3, 0);
-            GL.End();
-            */
 
             GL.PopMatrix();
 
@@ -183,6 +174,11 @@ namespace NDraw
                 GL.Vertex(points[i]);
 #endif
             }
+        }
+
+        protected void ClearLines()
+        {
+            Draw.Clear();
         }
     }
 }
